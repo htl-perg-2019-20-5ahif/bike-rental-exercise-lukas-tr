@@ -24,6 +24,15 @@ namespace BikeRental
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IDataAccess, DataAccess>();
+            services.AddTransient<ICostCalculator, CostCalculator>();
+
+            services.AddMvc();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Bike Rental API", Version = "v1" });
+            });
+
             services.AddControllers();
         }
 
@@ -34,6 +43,13 @@ namespace BikeRental
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseRouting();
 
